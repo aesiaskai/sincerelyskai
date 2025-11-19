@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Sincerely, Skai | Portfolio</title>
+    
+    <meta
+        name="portfolio page"
+        content="portfolio page showcasing graphic design work">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@400;700&family=Emilys+Candy&family=Yomogi&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="site-branding">
+            <a href="index.html">
+                <img src="assets/images/logo.png" 
+                alt="Logo" 
+                title="Logo">
+            </a>
+            <a href="index.html" title="Home">Skai ❀ Graphic Designer</a>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="portfolio.html" title="Portfolio">Portfolio</a></li>
+                <li><a href="about.html" title="About">About</a></li>
+                <li><a href="contact.html" title="Contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="container">
+            <div class="slider-wrapper">
+                <div class="slider">
+                    <img id="slide-1" src="assets/images/operettabook.png" alt="Operetta Typebook Page" title="Operetta Typebook Page"/>
+                    <img id="slide-2" src="assets/images/sunnyscoopswrap.jpg" alt="placeholder 2" title="placeholder 2"/>
+                    <img id="slide-3" src="assets/images/hereandmeowlogo.gif" alt="Here & Meow Animated Logo" title="Here & Meow Animated Logo"/>
+                </div>
+                <div class="slider-nav" role="tablist" aria-label="Slider navigation">
+                    <button type="button" aria-label="Go to slide 1"></button>
+                    <button type="button" aria-label="Go to slide 2"></button>
+                    <button type="button" aria-label="Go to slide 3"></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+            <nav>
+                <ul>
+                    <li><a href="https://www.instagram.com/sincerely.skai/" 
+                    target="_blank" title="Instagram">
+                        <img src="assets/images/instagram.png">
+                    </a></li>
+                    <li><a href="https://www.linkedin.com/in/aesia-r-b04029138/" 
+                    target="_blank" title="LinkedIn">
+                        <img src="assets/images/linkedin.png">
+                    </a></li>
+                </ul>
+            </nav>
+            <div class="cheddar">
+                <p title="Copyright">
+                    © 2025 | Aesia Skai Ratsombath
+                    <img src="assets/images/cheddarstretch.png" 
+                    title="Cheddar the Cat" alt="Cheddar the Cat">
+                </p>
+            </div>
+    </footer>
+    
+    <!-- Slider nav: prevent default anchor jump and scroll the slider horizontally instead; track active dot -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slider = document.querySelector('.slider');
+            const navLinks = Array.from(document.querySelectorAll('.slider-nav button'));
+            const slides = Array.from(slider ? slider.children : []);
+            if (!slider || !navLinks.length || !slides.length) return;
+
+            // helper to set the active nav link by index
+            function setActiveIndex(idx) {
+                navLinks.forEach((a, i) => {
+                    a.classList.toggle('active', i === idx);
+                    a.setAttribute('aria-pressed', String(i === idx));
+                });
+            }
+
+            // on click, prevent jump and scroll the slider horizontally
+            navLinks.forEach((link, i) => {
+                link.addEventListener('click', function (e) {
+                    // buttons don't require preventDefault but keep behavior consistent
+                    const slide = slides[i];
+                    if (slide) {
+                        slider.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
+                        setActiveIndex(i);
+                    }
+                });
+                // make buttons keyboard-friendly (Enter/Space)
+                link.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // update active dot while user scrolls the slider
+            let ticking = false;
+            function onScroll() {
+                if (ticking) return;
+                window.requestAnimationFrame(() => {
+                    const center = slider.scrollLeft + slider.clientWidth / 2;
+                    let closestIdx = 0;
+                    let closestDist = Infinity;
+                    slides.forEach((s, idx) => {
+                        const sCenter = s.offsetLeft + s.clientWidth / 2;
+                        const dist = Math.abs(sCenter - center);
+                        if (dist < closestDist) { closestDist = dist; closestIdx = idx; }
+                    });
+                    setActiveIndex(closestIdx);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+
+            // initial state
+            setActiveIndex(0);
+            slider.addEventListener('scroll', onScroll, { passive: true });
+        });
+    </script>
+</body>
+
+</html>
